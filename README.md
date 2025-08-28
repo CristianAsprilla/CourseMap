@@ -333,7 +333,244 @@ The frontend is pre-configured to connect to the backend.
 
 This project is for educational and personal use at UTP.
 
-## Support
+## 🚀 Deployment to Azure
 
-Check `Instruction.md` or create an issue for questions.
+### ✅ **CURRENT WORKING DEPLOYMENT**
+
+**Status**: 🟢 **FULLY FUNCTIONAL** - Successfully deployed and tested!
+
+**Live URLs:**
+
+- **Frontend**: <https://mitrayectoria-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io>
+- **Backend**: <https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io>
+- **API Docs**: <https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io/docs>
+
+### Architecture Overview
+
+```
+┌─────────────────┐    ┌─────────────────┐
+│   Azure         │    │   Azure         │
+│ Container Apps  │    │ Container Apps  │
+│   (Frontend)    │◄───┤   (Backend)     │
+│                 │    │                 │
+│ React + Vite    │    │ FastAPI + Python│
+│ Port: 5173      │    │ Port: 8000      │
+└─────────┬───────┘    └─────────┬───────┘
+          │                      │
+          └──────────┬───────────┘
+                     │
+          ┌──────────▼───────────┐
+          │   Azure Cognitive    │
+          │   Services           │
+          │   (PDF Processing)   │
+          └──────────┬───────────┘
+                     │
+          ┌──────────▼───────────┐
+          │   Azure Container    │
+          │   Registry          │
+          │   (Private Images)   │
+          └──────────────────────┘
+```
+
+### Quick Deployment
+
+#### Option 1: Automated Script (Recommended)
+
+```bash
+# Make script executable
+chmod +x deploy-azure.sh
+
+# Run deployment
+./deploy-azure.sh
+```
+
+The script will:
+
+- ✅ Create Azure resources (RG, ACR, Container Environment)
+- ✅ Build and push Docker images securely
+- ✅ Deploy both frontend and backend
+- ✅ Configure environment variables
+- ✅ Provide working URLs
+
+#### Option 2: Manual Deployment
+
+```bash
+# 1. Build and push containers
+docker build -t mitrayectoria-backend ./backend
+docker build -t mitrayectoria-frontend ./frontend
+
+# 2. Create Azure Container Apps
+az containerapp create --name mitrayectoria-backend \
+  --resource-group mitrayectoria-rg \
+  --environment mitrayectoria-env \
+  --image mitrayectoria-backend \
+  --target-port 8000 \
+  --env-vars AZURE_ENDPOINT=https://your-endpoint \
+  --registry-server your-acr.azurecr.io
+
+az containerapp create --name mitrayectoria-frontend \
+  --resource-group mitrayectoria-rg \
+  --environment mitrayectoria-env \
+  --image mitrayectoria-frontend \
+  --target-port 5173 \
+  --env-vars VITE_API_BASE_URL=https://mitrayectoria-backend.azurecontainerapps.io
+```
+
+### Environment Variables Setup
+
+#### Backend Variables (Required)
+
+Set these environment variables before deployment:
+
+```bash
+export AZURE_ENDPOINT="https://your-cognitive-service-endpoint.cognitiveservices.azure.com/"
+export AZURE_API_VERSION="2025-05-01-preview"
+export AZURE_SUBSCRIPTION_KEY="your-subscription-key"
+export AZURE_ANALYZER_ID="Extract-Table"
+```
+
+The deployment script will automatically use these environment variables.
+
+#### Frontend Variables (Auto-configured)
+
+The deployment script automatically sets:
+
+```bash
+VITE_API_BASE_URL=https://mitrayectoria-backend.azurecontainerapps.io
+```
+
+### Testing the Deployment Script Safely
+
+Before deploying to production, you can test the deployment script using different methods that won't affect your current working deployment:
+
+#### Option 1: Local Docker Testing (No Azure Costs)
+
+```bash
+# Test Docker builds locally without using Azure
+./test-deployment.sh local
+```
+
+This will:
+- ✅ Test backend Docker build
+- ✅ Test frontend Docker build
+- ✅ Verify all dependencies are correctly configured
+- ✅ No Azure resources created
+
+#### Option 2: Dry Run Mode (No Azure Resources Created)
+
+```bash
+# See what would be deployed without creating resources
+./test-deployment.sh dry-run
+```
+
+This will:
+- ✅ Show all Azure CLI commands that would be executed
+- ✅ Display resource names and configurations
+- ✅ Validate environment variables
+- ✅ No actual resources created
+
+#### Option 3: Test Environment (Separate Resources)
+
+```bash
+# Deploy to test resources that won't affect production
+./test-deployment.sh test-env
+```
+
+This will:
+- ✅ Create separate test resources with different names
+- ✅ Deploy both frontend and backend to test environment
+- ✅ Provide test URLs for validation
+- ⚠️ **Will incur Azure costs** (but uses different resource names)
+
+#### Option 4: Interactive Step-by-Step Testing
+
+```bash
+# Guided testing with options to choose what to test
+./test-deployment.sh step-by-step
+```
+
+This provides an interactive menu to choose testing approaches.
+
+#### Test Resource Names
+
+When using test modes, the following resource names are used:
+- **Resource Group**: `mitrayectoria-test-rg`
+- **ACR**: `mitrayectoriautptest`
+- **Environment**: `mitrayectoria-test-env`
+- **Backend App**: `mitrayectoria-test-backend`
+- **Frontend App**: `mitrayectoria-test-frontend`
+
+#### Quick Cleanup Commands
+
+```bash
+# Delete test resources directly
+./test-deployment.sh cleanup
+
+# Or manually delete the test resource group
+az group delete --name mitrayectoria-test-rg --yes --no-wait
+```
+
+### Environment Variables for Testing
+
+Make sure you have these environment variables set:
+
+```bash
+export AZURE_ENDPOINT="https://your-cognitive-service-endpoint.cognitiveservices.azure.com/"
+export AZURE_API_VERSION="2024-02-15-preview"
+export AZURE_SUBSCRIPTION_KEY="your-subscription-key"
+export AZURE_ANALYZER_ID="your-analyzer-id"
+```
+
+### Testing Checklist
+
+- [ ] Local Docker builds successful
+- [ ] Dry run shows correct commands
+- [ ] Test environment deploys successfully
+- [ ] Frontend connects to backend in test environment
+- [ ] PDF upload and processing works in test environment
+- [ ] Test resources cleaned up after testing
+
+### Troubleshooting
+
+#### Common Issues & Solutions
+
+**❌ "Upload failed" error:**
+
+- ✅ **FIXED**: Backend was crashing due to None values in PDF processing
+- ✅ **SOLUTION**: Added null checks in `backend/utils/cleaner.py`
+
+**❌ Frontend can't connect to backend:**
+
+- ✅ **FIXED**: Environment variables not properly set
+- ✅ **SOLUTION**: Script now dynamically retrieves backend URL
+
+**❌ CORS errors:**
+
+- ✅ **CONFIGURED**: Backend allows all origins with proper headers
+
+**❌ PDF processing fails:**
+
+- ✅ **VERIFIED**: Azure Cognitive Services working correctly
+- ✅ **TESTED**: Successfully processes UTP study plan PDFs
+
+### Cost Estimation
+
+- **Azure Container Apps**: ~$10-50/month (based on usage)
+- **Azure Cognitive Services**: Pay-per-use (~$0.01-0.05 per PDF)
+- **Azure Container Registry**: ~$5/month
+- **Total**: ~$15-60/month depending on usage
+
+### Security Features
+
+- 🔒 **Private Container Registry**: Images only accessible with authentication
+- 🔒 **Environment Variables**: Sensitive data stored securely
+- 🔒 **CORS Protection**: Configured for cross-origin requests
+- 🔒 **Azure Authentication**: Required for all Azure services
+
+### Performance Optimization
+
+- ⚡ **FastAPI Backend**: High-performance async API
+- ⚡ **React Frontend**: Optimized with Vite build system
+- ⚡ **Azure CDN**: Global content delivery (optional)
+- ⚡ **Container Scaling**: Auto-scale based on demand
 

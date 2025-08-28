@@ -6,6 +6,13 @@ export default defineConfig({
   server: {
     port: 5173,
   },
+  preview: {
+    allowedHosts: [
+      'mitrayectoria-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io',
+      'localhost',
+      '127.0.0.1'
+    ],
+  },
 })
 
 

@@ -12,10 +12,14 @@ export default function UploadPDF({ onResult, setLoading }) {
     setLoading && setLoading(true)
     setError('')
     try {
+      console.log('Starting upload for file:', file.name)
       const data = await uploadPdf(file)
+      console.log('Upload successful, received data:', data)
       onResult && onResult(data)
+      console.log('onResult callback completed')
     } catch (e) {
-      setError('Upload failed')
+      console.error('Upload failed with error:', e)
+      setError(`Upload failed: ${e.message || 'Unknown error'}`)
     } finally {
       setBusy(false)
       setLoading && setLoading(false)

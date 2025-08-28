@@ -51,6 +51,8 @@ def clean_document(content):
     fields = clean_value(content.get("fields", {}))  # unwrap all 'type' layers
 
     plan_items = fields.get("PLAN", [])
+    if plan_items is None:
+        plan_items = []
     plan = [clean_plan_fields(p) for p in plan_items]
 
     return {

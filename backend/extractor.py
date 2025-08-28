@@ -15,19 +15,20 @@ import requests
 
 def main():
     file_path= "../Data/utp-test-2.pdf"
-    # Load env vars from backend/.env if present
-    load_dotenv(dotenv_path=Path(__file__).parent / ".env", override=True)
+    # Load env vars from project root .env if present
+    load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env", override=True)
+
+    # Use environment variables instead of hardcoded values
+    api_version = os.getenv("AZURE_API_VERSION", "2025-05-01-preview")
+    subscription_key = os.getenv("AZURE_SUBSCRIPTION_KEY")
+    analyzer_id = os.getenv("AZURE_ANALYZER_ID", "Extract-Table")
 
     settings = Settings(
-        api_version="2025-05-01-preview",
-        # Either subscription_key or aad_token must be provided. Subscription Key is more prioritized.
-        subscription_key=os.getenv("AZURE_SUBSCRIPTION_KEY"),
-        # aad_token=os.getenv("AZURE_CONTENT_UNDERSTANDING_AAD_TOKEN"),
-        # Insert the analyzer name.
-        analyzer_id="Extract-Table",
-        # Insert the supported file types of the analyzer.
-        # file_location="https://raw.githubusercontent.com/Azure/azure-sdk-for-python/main/sdk/formrecognizer/azure-ai-formrecognizer/tests/sample_forms/receipt/contoso-receipt.png",
-        file_location= file_path
+        endpoint=endpoint,
+        api_version=api_version,
+        subscription_key=subscription_key,
+        analyzer_id=analyzer_id,
+        file_location=file_path
     )
     client = AzureContentUnderstandingClient(
         settings.endpoint,
