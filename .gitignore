@@ -203,3 +203,6 @@ logs/
 *.temp
 .cache/
 
+# Temporary: Security cleanup guide (remove when ready to commit)
+GIT-SECURITY-CLEANUP-GUIDE.md
+
