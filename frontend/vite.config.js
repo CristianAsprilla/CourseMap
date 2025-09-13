@@ -8,7 +8,7 @@ export default defineConfig({
   },
   preview: {
     allowedHosts: [
-      'mitrayectoria-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io',
+      'coursemap-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io',
       'localhost',
       '127.0.0.1'
     ],

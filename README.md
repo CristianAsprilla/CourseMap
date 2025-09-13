@@ -1,6 +1,6 @@
-# Mi Trayectoria UTP
+# CourseMap
 
-A comprehensive web application for managing UTP (Universidad Tecnológica de Panamá) study plans and academic progress tracking.
+A comprehensive web application for managing study plans and academic progress tracking, originally designed for Universidad Tecnológica de Panamá (UTP) students.
 
 ## Features
 
@@ -10,9 +10,9 @@ A comprehensive web application for managing UTP (Universidad Tecnológica de Pa
 - 🎨 **Modern UI**: Clean, responsive interface with faculty-specific color themes
 - 🔄 **Real-time Updates**: Automatic updates when processing documents
 
-## About UTP
+## About CourseMap
 
-This application is specifically designed for **Universidad Tecnológica de Panamá (UTP)** students to manage their study plans and track academic progress. The system supports the following faculties:
+**CourseMap** is a comprehensive study plan management system originally designed for **Universidad Tecnológica de Panamá (UTP)** students to manage their study plans and track academic progress. The system supports the following faculties:
 
 - **CIENCIAS Y TECNOLOGÍA** (Science and Technology)
 - **INGENIERÍA CIVIL** (Civil Engineering)
@@ -20,6 +20,8 @@ This application is specifically designed for **Universidad Tecnológica de Pana
 - **INGENIERÍA INDUSTRIAL** (Industrial Engineering)
 - **INGENIERÍA MECÁNICA** (Mechanical Engineering)
 - **INGENIERÍA DE SISTEMAS COMPUTACIONALES** (Computer Systems Engineering)
+
+While originally built for UTP, CourseMap can be adapted for other universities and educational institutions.
 
 ## 🛠️ Technology Stack
 
@@ -49,7 +51,7 @@ This application is specifically designed for **Universidad Tecnológica de Pana
 
 ```mermaid
 graph TB
-    A[🌐 Mi Trayectoria UTP<br/>Universidad Tecnológica de Panamá] --> B[Frontend Layer<br/>React + Vite]
+    A[🌐 CourseMap<br/>Study Plan Management] --> B[Frontend Layer<br/>React + Vite]
     A --> C[Backend Layer<br/>FastAPI + Python]
 
     B --> D[User Interface]
@@ -129,8 +131,8 @@ graph TB
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                            🌐 Mi Trayectoria UTP                             │
-│                          Universidad Tecnológica de Panamá                   │
+│                               🌐 CourseMap                                  │
+│                         Study Plan Management System                         │
 └─────────────────────────────────────────────────────────────────────────────┘
                                         │
                           ┌───────────┼───────────┐
@@ -213,7 +215,7 @@ graph TB
 ## Project Structure
 
 ```
-mitrayectoriautp/
+coursemap/
 ├── backend/                 # FastAPI backend
 │   ├── main.py             # Main application and API routes
 │   ├── models.py           # Data models and database schemas
@@ -341,9 +343,9 @@ This project is for educational and personal use at UTP.
 
 **Live URLs:**
 
-- **Frontend**: <https://mitrayectoria-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io>
-- **Backend**: <https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io>
-- **API Docs**: <https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io/docs>
+- **Frontend**: <https://coursemap-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io>
+- **Backend**: <https://coursemap-backend.kindmeadow-14f25848.westus.azurecontainerapps.io>
+- **API Docs**: <https://coursemap-backend.kindmeadow-14f25848.westus.azurecontainerapps.io/docs>
 
 ### Architecture Overview
 
@@ -396,24 +398,24 @@ The script will:
 
 ```bash
 # 1. Build and push containers
-docker build -t mitrayectoria-backend ./backend
-docker build -t mitrayectoria-frontend ./frontend
+docker build -t coursemap-backend ./backend
+docker build -t coursemap-frontend ./frontend
 
 # 2. Create Azure Container Apps
-az containerapp create --name mitrayectoria-backend \
-  --resource-group mitrayectoria-rg \
-  --environment mitrayectoria-env \
-  --image mitrayectoria-backend \
+az containerapp create --name coursemap-backend \
+  --resource-group coursemap-rg \
+  --environment coursemap-env \
+  --image coursemap-backend \
   --target-port 8000 \
   --env-vars AZURE_ENDPOINT=https://your-endpoint \
   --registry-server your-acr.azurecr.io
 
-az containerapp create --name mitrayectoria-frontend \
-  --resource-group mitrayectoria-rg \
-  --environment mitrayectoria-env \
-  --image mitrayectoria-frontend \
+az containerapp create --name coursemap-frontend \
+  --resource-group coursemap-rg \
+  --environment coursemap-env \
+  --image coursemap-frontend \
   --target-port 5173 \
-  --env-vars VITE_API_BASE_URL=https://mitrayectoria-backend.azurecontainerapps.io
+  --env-vars VITE_API_BASE_URL=https://coursemap-backend.azurecontainerapps.io
 ```
 
 ### Environment Variables Setup
@@ -436,7 +438,7 @@ The deployment script will automatically use these environment variables.
 The deployment script automatically sets:
 
 ```bash
-VITE_API_BASE_URL=https://mitrayectoria-backend.azurecontainerapps.io
+VITE_API_BASE_URL=https://coursemap-backend.azurecontainerapps.io
 ```
 
 ### Testing the Deployment Script Safely
@@ -494,11 +496,12 @@ This provides an interactive menu to choose testing approaches.
 #### Test Resource Names
 
 When using test modes, the following resource names are used:
-- **Resource Group**: `mitrayectoria-test-rg`
-- **ACR**: `mitrayectoriautptest`
-- **Environment**: `mitrayectoria-test-env`
-- **Backend App**: `mitrayectoria-test-backend`
-- **Frontend App**: `mitrayectoria-test-frontend`
+
+- **Resource Group**: `coursemap-test-rg`
+- **ACR**: `coursemaputptest`
+- **Environment**: `coursemap-test-env`
+- **Backend App**: `coursemap-test-backend`
+- **Frontend App**: `coursemap-test-frontend`
 
 #### Quick Cleanup Commands
 
@@ -507,7 +510,7 @@ When using test modes, the following resource names are used:
 ./test-deployment.sh cleanup
 
 # Or manually delete the test resource group
-az group delete --name mitrayectoria-test-rg --yes --no-wait
+az group delete --name coursemap-test-rg --yes --no-wait
 ```
 
 ### Environment Variables for Testing

@@ -1,23 +1,23 @@
 #!/bin/bash
 
-# SECURE Azure deployment script for Mi Trayectoria UTP
+# SECURE Azure deployment script for CourseMap
 # This script deploys the FastAPI backend and React frontend to Azure Container Apps
 
 # Configuration - Update these values as needed
 if [ "$TEST_MODE" = "true" ]; then
-    RESOURCE_GROUP="mitrayectoria-test-rg"
+    RESOURCE_GROUP="coursemap-test-rg"
     LOCATION="westus"
-    ACR_NAME="mitrayectoriautptest"
-    ENV_NAME="mitrayectoria-test-env"
-    BACKEND_APP="mitrayectoria-test-backend"
-    FRONTEND_APP="mitrayectoria-test-frontend"
+    ACR_NAME="coursemaptest"
+    ENV_NAME="coursemap-test-env"
+    BACKEND_APP="coursemap-test-backend"
+    FRONTEND_APP="coursemap-test-frontend"
 else
-    RESOURCE_GROUP="mitrayectoria-rg"
+    RESOURCE_GROUP="coursemap-rg"
     LOCATION="westus"
-    ACR_NAME="mitrayectoriautp"
-    ENV_NAME="mitrayectoria-env"
-    BACKEND_APP="mitrayectoria-backend"
-    FRONTEND_APP="mitrayectoria-frontend"
+    ACR_NAME="coursemap"
+    ENV_NAME="coursemap-env"
+    BACKEND_APP="coursemap-backend"
+    FRONTEND_APP="coursemap-frontend"
 fi
 
 # Azure Cognitive Services configuration - SET THESE ENVIRONMENT VARIABLES
@@ -41,7 +41,7 @@ if [ -z "$AZURE_ENDPOINT" ] || [ -z "$AZURE_SUBSCRIPTION_KEY" ] || [ -z "$AZURE_
     exit 1
 fi
 
-echo "🚀 Starting SECURE Azure deployment for Mi Trayectoria UTP..."
+echo "🚀 Starting SECURE Azure deployment for CourseMap..."
 echo "🔒 Your images will be PRIVATE and only accessible by your account"
 
 if [ "$TEST_MODE" = "true" ]; then
@@ -108,7 +108,7 @@ fi
 
 echo "🐳 Building and pushing backend image..."
 cd backend
-docker build -t $ACR_NAME.azurecr.io/mitrayectoria-backend:latest .
+docker build -t $ACR_NAME.azurecr.io/coursemap-backend:latest .
 
 if [ "$DRY_RUN" != "true" ]; then
     # Get ACR credentials and login
@@ -116,7 +116,7 @@ if [ "$DRY_RUN" != "true" ]; then
     ACR_PASSWORD=$(az acr credential show --name $ACR_NAME --query passwords[0].value -o tsv)
     echo $ACR_PASSWORD | docker login $ACR_NAME.azurecr.io -u $ACR_USERNAME --password-stdin
 
-    docker push $ACR_NAME.azurecr.io/mitrayectoria-backend:latest
+    docker push $ACR_NAME.azurecr.io/coursemap-backend:latest
 else
     echo "   [DRY RUN] Would login to ACR and push backend image"
 fi
@@ -124,10 +124,10 @@ cd ..
 
 echo "🐳 Building and pushing frontend image..."
 cd frontend
-docker build -t $ACR_NAME.azurecr.io/mitrayectoria-frontend:latest .
+docker build -t $ACR_NAME.azurecr.io/coursemap-frontend:latest .
 
 if [ "$DRY_RUN" != "true" ]; then
-    docker push $ACR_NAME.azurecr.io/mitrayectoria-frontend:latest
+    docker push $ACR_NAME.azurecr.io/coursemap-frontend:latest
 else
     echo "   [DRY RUN] Would push frontend image"
 fi
@@ -135,13 +135,13 @@ cd ..
 
 echo "🚀 Deploying backend with secure authentication..."
 if [ "$DRY_RUN" = "true" ]; then
-    echo "   [DRY RUN] az containerapp create --name $BACKEND_APP --resource-group $RESOURCE_GROUP --environment $ENV_NAME --image $ACR_NAME.azurecr.io/mitrayectoria-backend:latest --target-port 8000 --ingress external --env-vars AZURE_ENDPOINT=$AZURE_ENDPOINT ... --registry-server $ACR_NAME.azurecr.io"
+    echo "   [DRY RUN] az containerapp create --name $BACKEND_APP --resource-group $RESOURCE_GROUP --environment $ENV_NAME --image $ACR_NAME.azurecr.io/coursemap-backend:latest --target-port 8000 --ingress external --env-vars AZURE_ENDPOINT=$AZURE_ENDPOINT ... --registry-server $ACR_NAME.azurecr.io"
 else
     az containerapp create \
       --name $BACKEND_APP \
       --resource-group $RESOURCE_GROUP \
       --environment $ENV_NAME \
-      --image $ACR_NAME.azurecr.io/mitrayectoria-backend:latest \
+      --image $ACR_NAME.azurecr.io/coursemap-backend:latest \
       --target-port 8000 \
       --ingress external \
       --env-vars \
@@ -165,13 +165,13 @@ fi
 
 echo "🚀 Deploying frontend with secure authentication..."
 if [ "$DRY_RUN" = "true" ]; then
-    echo "   [DRY RUN] az containerapp create --name $FRONTEND_APP --resource-group $RESOURCE_GROUP --environment $ENV_NAME --image $ACR_NAME.azurecr.io/mitrayectoria-frontend:latest --target-port 5173 --ingress external --env-vars VITE_API_BASE_URL=$BACKEND_URL --registry-server $ACR_NAME.azurecr.io"
+    echo "   [DRY RUN] az containerapp create --name $FRONTEND_APP --resource-group $RESOURCE_GROUP --environment $ENV_NAME --image $ACR_NAME.azurecr.io/coursemap-frontend:latest --target-port 5173 --ingress external --env-vars VITE_API_BASE_URL=$BACKEND_URL --registry-server $ACR_NAME.azurecr.io"
 else
     az containerapp create \
       --name $FRONTEND_APP \
       --resource-group $RESOURCE_GROUP \
       --environment $ENV_NAME \
-      --image $ACR_NAME.azurecr.io/mitrayectoria-frontend:latest \
+      --image $ACR_NAME.azurecr.io/coursemap-frontend:latest \
       --target-port 5173 \
       --ingress external \
       --env-vars \

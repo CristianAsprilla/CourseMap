@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const client = axios.create({
-  baseURL: 'https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io',
+  baseURL: 'https://coursemap-backend.kindmeadow-14f25848.westus.azurecontainerapps.io',
 })
 
 export async function uploadPdf(file) {

@@ -59,14 +59,14 @@ cp .env.example .env
 
 ### Live Application URLs
 
-- **Frontend**: <https://mitrayectoria-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io>
-- **Backend API**: <https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io>
-- **API Documentation**: <https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io/docs>
+- **Frontend**: <https://coursemap-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io>
+- **Backend API**: <https://coursemap-backend.kindmeadow-14f25848.westus.azurecontainerapps.io>
+- **API Documentation**: <https://coursemap-backend.kindmeadow-14f25848.westus.azurecontainerapps.io/docs>
 
 ### Testing the Cloud Deployment
 
 1. **Access the live application**:
-   Open <https://mitrayectoria-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io>
+   Open <https://coursemap-frontend.kindmeadow-14f25848.westus.azurecontainerapps.io>
 
 2. **Test PDF upload**:
    - Upload a UTP study plan PDF
@@ -74,12 +74,12 @@ cp .env.example .env
    - You should see the extracted course information displayed
 
 3. **Check backend health**:
-   Visit <https://mitrayectoria-backend.kindmeadow-14f25848.westus.azurecontainerapps.io/docs>
+   Visit <https://coursemap-backend.kindmeadow-14f25848.westus.azurecontainerapps.io/docs>
 
 4. **Monitor logs** (if you have Azure CLI access):
 
    ```bash
-   az containerapp logs show --name mitrayectoria-backend --resource-group mitrayectoria-rg --follow
+   az containerapp logs show --name coursemap-backend --resource-group coursemap-rg --follow
    ```
 
 ### Deployment Architecture

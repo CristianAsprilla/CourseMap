@@ -8,12 +8,12 @@ echo "================================================"
 echo ""
 
 # Test resource names - clearly marked as test resources
-TEST_RESOURCE_GROUP="test-mitrayectoria-rg"
+TEST_RESOURCE_GROUP="coursemap-test-rg"
 TEST_LOCATION="westus"
-TEST_ACR_NAME="test-mitrayectoria-acr"
-TEST_ENV_NAME="test-mitrayectoria-env"
-TEST_BACKEND_APP="test-mitrayectoria-backend"
-TEST_FRONTEND_APP="test-mitrayectoria-frontend"
+TEST_ACR_NAME="coursemap-test-acr"
+TEST_ENV_NAME="coursemap-test-env"
+TEST_BACKEND_APP="coursemap-test-backend"
+TEST_FRONTEND_APP="coursemap-test-frontend"
 
 # Azure Cognitive Services configuration - SET THESE ENVIRONMENT VARIABLES
 # Same as deployment since test-env is a step before real deployment
@@ -435,9 +435,9 @@ local_testing() {
     # Test backend build
     echo "🐳 Testing backend Docker build..."
     cd backend
-    if docker build -t mitrayectoria-backend:test .; then
+    if docker build -t coursemap-backend:test .; then
         echo "✅ Backend build successful"
-        CREATED_DOCKER_IMAGES+=("mitrayectoria-backend:test")
+        CREATED_DOCKER_IMAGES+=("coursemap-backend:test")
     else
         echo "❌ Backend build failed"
         cd ..
@@ -448,9 +448,9 @@ local_testing() {
     # Test frontend build
     echo "🐳 Testing frontend Docker build..."
     cd frontend
-    if docker build -t mitrayectoria-frontend:test .; then
+    if docker build -t coursemap-frontend:test .; then
         echo "✅ Frontend build successful"
-        CREATED_DOCKER_IMAGES+=("mitrayectoria-frontend:test")
+        CREATED_DOCKER_IMAGES+=("coursemap-frontend:test")
     else
         echo "❌ Frontend build failed"
         cd ..
