@@ -10,6 +10,26 @@ A comprehensive web application for managing study plans and academic progress t
 - 🎨 **Modern UI**: Clean, responsive interface with faculty-specific color themes
 - 🔄 **Real-time Updates**: Automatic updates when processing documents
 
+## Screenshots
+
+*Note: Web design is not my strength, but the application is fully functional.*
+
+### Main Interface
+
+![Main Interface](screenshots/1.png)
+
+### PDF Processing
+
+![PDF Processing](screenshots/2.png)
+
+### Card View
+
+![Card View](screenshots/cardview.png)
+
+### Table View
+
+![Table View](screenshots/tableview.png)
+
 ## About CourseMap
 
 **CourseMap** is a comprehensive study plan management system originally designed for **Universidad Tecnológica de Panamá (UTP)** students to manage their study plans and track academic progress. The system supports the following faculties:
